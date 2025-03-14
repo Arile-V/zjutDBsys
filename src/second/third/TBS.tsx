@@ -11,15 +11,15 @@ interface TBSProps {
 
 function TBS(props: TBSProps) {
     const [htmlPages, setHtmlPages] = React.useState(props.htmlPages);
-    const [currentIndex, setCurrentIndex] = React.useState(0);
+    const [currentIndex, setCurrentIndex] = React.useState(-1);
     const showPreviousPage = () => {
         setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
     };
 
     const showThis = () => {
         // setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-        setCurrentIndex(0);
-    }
+        setCurrentIndex((prevIndex) => 0);
+    };
 
     const showNextPage = () => {
         setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, htmlPages.length - 1));
