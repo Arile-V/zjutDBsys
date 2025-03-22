@@ -1,11 +1,13 @@
 import * as XLSX from 'xlsx';
 import TBS from './third/TBS';
 import SumUp from './third/SumUp';
+import React from 'react';
 
 function FileInput(){
     let htmlPages: string[] = [];
     let jsonList: any[] = []; // 存放html页面的数组
     let headers: any[][] = [];
+    const [PutT, setPut] = React.useState(false);
     return(
         <>
             <div className="file-input">
@@ -36,7 +38,7 @@ function FileInput(){
                         }
                         fileInput.value = ''
                     }}>上传</button>
-                <TBS htmlPages={htmlPages} jsonList={jsonList} headers={headers}/>
+                {!PutT&&<TBS htmlPages={htmlPages} jsonList={jsonList} headers={headers} Put={PutT}/>}
             </div>
         </>
     )

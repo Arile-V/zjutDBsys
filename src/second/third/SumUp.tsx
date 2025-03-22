@@ -73,13 +73,17 @@ const SumUp = (Props: Props) => {
                 //setWeightSum(weightSum+SonSum.getMainWeight());//TODO记得写一个根据这个值判断是否提醒的元素
                 SonSum = new sonSum("");
                 //sumUpButtons.innerHTML += `<button id="sumUpButton${sumUpButtons.children.length}" onclick=${PlusIntoSum()} value=${sumUpButtons.children.length}>${context.value} ${weight.value}</button>`
-                plus += `|成分：${context.value}得分：${littleSum*100}% 权重：${weight.value}|`;
+                plus += `<tr><td>课程目标组成：${context.value}</td><td>得分：${littleSum*100}%</td><td>权重：${weight.value}</td></tr>`;
                 //写一个将此复合组成部分的子元素及其权重展示的功能
             }
         }
         let SUM = document.getElementById("SUM");
         if(SUM) {
-            SUM.innerHTML = "总达成度："+(Sum*100)+"% 组成部分"+plus;
+            SUM.innerHTML = "总达成度："+(Sum*100)+"%";
+        }
+        let ele = document.getElementById("ele");
+        if(ele) {
+            ele.innerHTML = plus;
         }
         context.value = "";
         weight.value = "";
@@ -92,6 +96,7 @@ const SumUp = (Props: Props) => {
             let percent = Number(prompt("请输入百分比"));
             if(index === undefined || percent === undefined) {
                 alert("请输入列号和百分比")
+                return;
             }
             else {
                 let ret = 0;
@@ -170,19 +175,25 @@ const SumUp = (Props: Props) => {
     return(
         <>
         <div id="sumUp">
-            <h3 id="SUM">达成度:{Sum}%</h3>
-            <h3>组成成分：{plus}</h3>
+            <thead><tr><td id="SUM">达成度:{Sum}%</td></tr></thead>
+            <tbody id="ele" >{plus}</tbody>
+            <hr/>
+            <h2>课程目标</h2>
+            <label htmlFor="Context">课程目标名:</label>
             <input id="Context" type="text" placeholder="请输入达成度复合组成部分"></input>
+            <label htmlFor="Weight"> 本课程目标权重:</label>
             <input id="Weight" type="text" placeholder="请输入权重"></input>
+            <br/>
+            <hr/>
+            <h3>课程目标组成元素</h3>
             <div id="Son"></div>
-            <button id="sumUpButton" onClick={()=>ComplexPlusIntoSum()}>添加达成度复合组成部分</button>
-        </div>
-        <div id="percentAverage">
+            <hr/>
+            <div id="tools"><h3>编辑特殊组成元素</h3>
             <button onClick={()=>sumDataPercent(Props.jsonList)}>增加百分比平均数元素</button>
+            </div>
+            <button id="sumUpButton" onClick={()=>ComplexPlusIntoSum()}>上传课程目标</button>
         </div>
-        <div id="sumUpButtons">
-        </div>
-        <div id="Weight"></div>
+        
         </>
     )
 }

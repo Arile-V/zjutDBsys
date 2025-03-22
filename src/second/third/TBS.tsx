@@ -6,6 +6,7 @@ interface TBSProps {
     htmlPages: string[];
     jsonList: any[];
     headers: any[][];
+    Put: any;
 }
 
 
@@ -15,6 +16,12 @@ function TBS(props: TBSProps) {
     const showPreviousPage = () => {
         setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
     };
+
+    const showIt = () => {
+        if(props.Put==true){
+            showThis();
+        }
+    }
 
     const showThis = () => {
         // setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
@@ -26,17 +33,15 @@ function TBS(props: TBSProps) {
     };
     return(
         <>
-        <br/>
-        <hr/>
-        <button onClick={showThis}>预览</button>
-        <br/>
-        <hr/>
         <SumUp jsonList={props.jsonList[currentIndex]} headers={props.headers[currentIndex]}/>
         <br/>
         <hr/>
         <button onClick={showPreviousPage}>上一页</button>
+        <button onClick={showThis}>预览</button>
         <button onClick={showNextPage}>下一页</button>
         <div dangerouslySetInnerHTML={{ __html: htmlPages[currentIndex] }} />
+        <br/>
+        <hr/>
         </>
     )
 }
