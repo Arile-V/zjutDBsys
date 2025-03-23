@@ -6,7 +6,6 @@ interface TBSProps {
     htmlPages: string[];
     jsonList: any[];
     headers: any[][];
-    Put: any;
 }
 
 
@@ -17,11 +16,6 @@ function TBS(props: TBSProps) {
         setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
     };
 
-    const showIt = () => {
-        if(props.Put==true){
-            showThis();
-        }
-    }
 
     const showThis = () => {
         // setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
