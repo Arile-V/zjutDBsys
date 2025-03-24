@@ -1,11 +1,14 @@
 //import React from "react";
 import sonSum from "../../resource/sonSum";
 interface Props {
-    jsonList: any[];
-    headers: any[];
+    jsonListRaw: any[];
+    headersRaw: any[][];
+    currentIndex: number;
 }
 
 const SumUp = (Props: Props) => {
+    let jsonList = Props.jsonListRaw[Props.currentIndex];
+    let headers = Props.headersRaw[Props.currentIndex];
     //主Sum
     let Sum = 0;
     let weightSum = 0;
@@ -122,41 +125,41 @@ const SumUp = (Props: Props) => {
                 maxmize = Number(max);
             }
         }
-        if(!Props.headers&&!Props.jsonList){
+        if(!Props.headersRaw&&!Props.jsonListRaw){
             console.log("Props.headers&&!Props.jsonList")
             return 0;
         }
         //按列求平均数,在按钮当中调用，作为PlusIntoSum的参数
         let ret = 0;
-        if(Props.jsonList.length === 0){
+        if(jsonList.length === 0){
             console.log("Props.jsonList.length === 0")
             return 0;
         }
-        for(let i = 0 ; i<Props.jsonList.length;i++){
-            if(Props.jsonList[i][index]&&!isNaN(Props.jsonList[i][index])){
-                console.log("Props.jsonList[i][index]"+ret)
-                ret +=Number(Props.jsonList[i][index]);
+        for(let i = 0 ; i<jsonList.length;i++){
+            if(jsonList[i][index]&&!isNaN(jsonList[i][index])){
+                //console.log("Props.jsonList[i][index]"+ret)
+                ret +=Number(jsonList[i][index]);
                 if(Try){
                     if(max === "max"){
-                        if(Props.jsonList[i][index]>maxmize){
-                            maxmize = Props.jsonList[i][index];
+                        if(jsonList[i][index]>maxmize){
+                            maxmize = jsonList[i][index];
                         }
                     }
                 }
             }
         }
-        console.log("else")
-        return ret/Props.jsonList.length/maxmize;
+        //console.log("else")
+        return ret/jsonList.length/maxmize;
     }
     
-    console.log(Props.headers)
-    if(Props.headers&&Props.jsonList&&Props.headers.length > 0) {
+    console.log(headers)
+    if(headers&&jsonList&&headers.length > 0) {
         let Son = document.getElementById("Son");
         if(Son) {
             Son.innerHTML = "";
             Sum = 0;
             SonSumList = [];
-            Props.headers.forEach((header, index) => {
+            headers.forEach((header, index) => {
                 let butt = document.createElement("button");
                 butt.onclick = () => PlusIntoSum(index, sumData(index,true), header);
                 butt.value = String(index);
@@ -189,7 +192,7 @@ const SumUp = (Props: Props) => {
             <div id="Son"></div>
             <hr/>
             <div id="tools"><h3>编辑特殊组成元素</h3>
-            <button onClick={()=>sumDataPercent(Props.jsonList)}>增加百分比平均数元素</button>
+            <button onClick={()=>sumDataPercent(jsonList)}>增加百分比平均数元素</button>
             </div>
             <button id="sumUpButton" onClick={()=>ComplexPlusIntoSum()}>上传课程目标</button>
         </div>
