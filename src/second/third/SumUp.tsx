@@ -25,15 +25,17 @@ const SumUp = (Props: Props) => {
         console.log(button,index,name,weight)
         //权重栏弹窗填写
         //index在调用者当中记得求和完成,当前按钮的index是当前列号
-        let butt = document.getElementById(`sumUpButton${button}`) as HTMLButtonElement;
+        let butt = document.getElementById(`sumUpButton${button}0`) as HTMLButtonElement;
+        let redobutt = document.getElementById(`sumUpButton${button}1`) as HTMLButtonElement;
         if(butt) {
-            if(butt.value === "0") {
-                butt.style.color = "black";
-                butt.value = "1";
-                SonSum.delSon(name);
-            }
-            butt.style.color = "grey";
+            butt.style.color = "white";
             butt.value = "0";
+            butt.id = `sumUpButton${button}1`;
+        }
+        if(redobutt) {
+            redobutt.style.color = "black";
+            redobutt.value = "1";
+            SonSum.delSon(name);
         }
         if(SonSum.isCanUpdate()){
             alert("此复合组成部分权重已满")
@@ -49,6 +51,7 @@ const SumUp = (Props: Props) => {
             SonSum.addSon(name,index,weight);//将子元素添加到子元素Sum中
             console.log(SonSum);
         }
+        
 
     }
     function ComplexPlusIntoSum() {
@@ -56,6 +59,7 @@ const SumUp = (Props: Props) => {
         let context = document.getElementById("Context") as HTMLInputElement;
         let weight = document.getElementById("Weight") as HTMLInputElement;
         let sumUpButtons = document.getElementById("sumUpButtons");
+        console.log(context.value,weight.value,sumUpButtons)
         if(sumUpButtons) {
             if(!SonSum.isCanUpdate()){
                 alert("此复合组成部分权重不足")
@@ -68,6 +72,7 @@ const SumUp = (Props: Props) => {
             else {
                 SonSum.setName(context.value);
                 SonSum.setMainWeight(Number(weight.value));
+                console.log(SonSum);
                 SonSumList.push(SonSum);
                 let littleSum = SonSum.getSum()*SonSum.getMainWeight();
                 Sum += littleSum;
@@ -82,12 +87,16 @@ const SumUp = (Props: Props) => {
         }
         let SUM = document.getElementById("SUM");
         if(SUM) {
+            console.log("SUM")
             SUM.innerHTML = "总达成度："+(Sum*100)+"%";
         }
         let ele = document.getElementById("ele");
         if(ele) {
+            console.log("ele")
             ele.innerHTML = plus;
         }
+        console.log(Sum);
+        console.log(plus)
         context.value = "";
         weight.value = "";
     }
@@ -148,7 +157,6 @@ const SumUp = (Props: Props) => {
                 }
             }
         }
-        //console.log("else")
         return ret/jsonList.length/maxmize;
     }
     
@@ -164,6 +172,7 @@ const SumUp = (Props: Props) => {
                 butt.onclick = () => PlusIntoSum(index, sumData(index,true), header);
                 butt.value = String(index);
                 butt.innerHTML = header;
+                butt.id = `sumUpButton${index}0`;
                 if(sumData(index,false)!=0&&header!="学号"&&header!="序号"){
                     Son.appendChild(butt);
                 }
@@ -172,7 +181,12 @@ const SumUp = (Props: Props) => {
         }
         let SUM = document.getElementById("SUM");
         if(SUM) {
-            SUM.innerHTML = "总达成度："+0+"% 组成部分";
+            SUM.innerHTML = "总达成度："+0+"%";
+        }
+        plus = "";
+        let ele = document.getElementById("ele");
+        if(ele) {
+            ele.innerHTML = plus;
         }
     }
     return(
@@ -190,11 +204,12 @@ const SumUp = (Props: Props) => {
             <hr/>
             <h3>课程目标组成元素</h3>
             <div id="Son"></div>
+            <br></br>
+            <button id="sumUpButtons" onClick={()=>ComplexPlusIntoSum()}>上传课程目标</button>
             <hr/>
             <div id="tools"><h3>编辑特殊组成元素</h3>
             <button onClick={()=>sumDataPercent(jsonList)}>增加百分比平均数元素</button>
             </div>
-            <button id="sumUpButton" onClick={()=>ComplexPlusIntoSum()}>上传课程目标</button>
         </div>
         
         </>
