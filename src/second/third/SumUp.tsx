@@ -27,15 +27,11 @@ const SumUp = (Props: Props) => {
         //index在调用者当中记得求和完成,当前按钮的index是当前列号
         let butt = document.getElementById(`sumUpButton${button}0`) as HTMLButtonElement;
         let redobutt = document.getElementById(`sumUpButton${button}1`) as HTMLButtonElement;
-        if(butt) {
-            butt.style.color = "white";
-            butt.value = "0";
-            butt.id = `sumUpButton${button}1`;
-        }
         if(redobutt) {
-            redobutt.style.color = "black";
-            redobutt.value = "1";
+            redobutt.style.backgroundColor = "";
+            redobutt.id = `sumUpButton${button}0`;
             SonSum.delSon(name);
+            return;
         }
         if(SonSum.isCanUpdate()){
             alert("此复合组成部分权重已满")
@@ -45,6 +41,15 @@ const SumUp = (Props: Props) => {
             if(weight) {
                 SonSum.addSon(name,index,weight);//将子元素添加到子元素Sum中
                 console.log(SonSum);
+                if(butt) {
+                    butt.style.backgroundColor= "gray";
+                    butt.value = "0";
+                    butt.id = `sumUpButton${button}1`;
+                }
+            }
+            else {
+                console.log("取消")
+                return
             }
         }
         else {
@@ -83,6 +88,21 @@ const SumUp = (Props: Props) => {
                 //sumUpButtons.innerHTML += `<button id="sumUpButton${sumUpButtons.children.length}" onclick=${PlusIntoSum()} value=${sumUpButtons.children.length}>${context.value} ${weight.value}</button>`
                 plus += `<tr><td>课程目标组成：${context.value}</td><td>得分：${littleSum*100}%</td><td>权重：${weight.value}</td></tr>`;
                 //写一个将此复合组成部分的子元素及其权重展示的功能
+                let son = document.getElementById("Son");
+                if(son) {
+                    son.innerHTML = "";
+                    headers.forEach((header, index) => {
+                        let butt = document.createElement("button");
+                        butt.onclick = () => PlusIntoSum(index, sumData(index,true), header);
+                        butt.value = String(index);
+                        butt.innerHTML = header;
+                        butt.id = `sumUpButton${index}0`;
+                        if(sumData(index,false)!=0&&header!="学号"&&header!="序号"){
+                            son.appendChild(butt);
+                        }
+                        //Son.innerHTML += `<button id="sumUpButton${index}" onclick={PlusIntoSum(index,sumData(index),header)} value=0>${header}</button>`
+                    })
+                }
             }
         }
         let SUM = document.getElementById("SUM");
@@ -205,7 +225,7 @@ const SumUp = (Props: Props) => {
             <h3>课程目标组成元素</h3>
             <div id="Son"></div>
             <br></br>
-            <button id="sumUpButtons" onClick={()=>ComplexPlusIntoSum()}>上传课程目标</button>
+            <button id="sumUpButtons" onClick={()=>ComplexPlusIntoSum()} style={{backgroundColor:"green"}}>上传课程目标</button>
             <hr/>
             <div id="tools"><h3>编辑特殊组成元素</h3>
             <button onClick={()=>sumDataPercent(jsonList)}>增加百分比平均数元素</button>
