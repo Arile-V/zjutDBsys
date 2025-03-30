@@ -171,17 +171,17 @@ function NewSum(Props: Props) {
                                     }
                                     fileInput.value = ''
                                 }}>分数构成</button>
-                                <div>
-                                    <table>
-                                        <tbody>
-                                        <tr id='sum'></tr>
-                                        <tr id='sumSon'></tr>
-                                        <tr id='sumWeight'></tr>
-                                        <tr id='sumSons'></tr>
-                                        </tbody>
-                                    </table>
-                                    
-                                </div>
+            <div>
+                <table>
+                    <tbody>
+                    <tr id='sum'></tr>
+                    <tr id='sumSon'></tr>
+                    <tr id='sumWeight'></tr>
+                    <tr id='sumSons'></tr>
+                    </tbody>
+                </table>
+                
+            </div>
         </>
     )
 }
