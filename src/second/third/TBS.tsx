@@ -20,11 +20,11 @@ function TBS(props: TBSProps) {
 
 
 
-    React.useEffect(() => {
+    useEffect(() => {
         // 当refreshKey变化时，执行某些操作
-        setCurrentIndex((prevIndex) => 0);
+        setCurrentIndex(0);
         console.log('ChildComponent re-rendered due to refreshKey change');
-      }, [props.refreshKey]);
+    }, [props.refreshKey]);
 
 
 
@@ -32,7 +32,6 @@ function TBS(props: TBSProps) {
         setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, props.htmlPages.length - 1));
     };
     if(props.refreshKey >= 3 && props.howTo === 1){
-        console.log(props.refreshKey)
         return(
             <>
             <br/>

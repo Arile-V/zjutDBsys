@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx';
 import TBS from './third/TBS';
-import React, { useEffect, useState } from 'react';
-import SumUp from './third/SumUp';
+import { useEffect, useState } from 'react';
+
 
 function FileInput(){
     //let htmlPages: string[] = [];
@@ -50,8 +50,6 @@ function FileInput(){
                                     setjsonList(prevList => [...prevList, jsonData]);
                                     //headers.push(jsonData[0] as any[]);
                                     setheaders(prevHeaders => [...prevHeaders, jsonData[0] as any[]]);
-                                    console.log(jsonData);
-                                    console.log(htmlData);
                                 })
                             }
                             fileReader.readAsArrayBuffer(file);
