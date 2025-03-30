@@ -12,7 +12,6 @@ const SumUp = (Props: Props) => {
     //主Sum
     let Sum = 0;
     let weightSum = 0;
-    //const [weightSum, setWeightSum] = React.useState(0);
     let plus="";
     let SonSumList = [];
     //子元素Sum
@@ -84,9 +83,11 @@ const SumUp = (Props: Props) => {
                 console.log(Sum);
                 weightSum += SonSum.getMainWeight();
                 //setWeightSum(weightSum+SonSum.getMainWeight());//TODO记得写一个根据这个值判断是否提醒的元素
-                SonSum = new sonSum("");
+                //SonSum = new sonSum("");
                 //sumUpButtons.innerHTML += `<button id="sumUpButton${sumUpButtons.children.length}" onclick=${PlusIntoSum()} value=${sumUpButtons.children.length}>${context.value} ${weight.value}</button>`
-                plus += `<tr><td>课程目标组成：${context.value}</td><td>得分：${littleSum*100}%</td><td>权重：${weight.value}</td></tr>`;
+                console.log(SonSum.getSonList())
+                plus += `<tr><td>课程目标组成：${context.value}</td><td>得分：${littleSum*100}%</td><td>成分：${SonSum.getSonList()}</td><td>权重：${weight.value}</td></tr>`;
+                SonSum = new sonSum("");
                 //写一个将此复合组成部分的子元素及其权重展示的功能
                 let son = document.getElementById("Son");
                 if(son) {
@@ -113,7 +114,11 @@ const SumUp = (Props: Props) => {
         let ele = document.getElementById("ele");
         if(ele) {
             console.log("ele")
-            ele.innerHTML = plus;
+            ele.innerHTML = plus + `<tr><tb><label htmlFor="Context">课程目标:</label>
+            <input id="Context" type="text" placeholder="请输入达成度复合组成部分"></input></tb>
+            <tb><label htmlFor="Weight"> 本课程目标权重:</label>
+            <input id="Weight" type="text" placeholder="请输入权重"></input></tb>
+            </tr>`;;
         }
         console.log(Sum);
         console.log(plus)
@@ -206,23 +211,20 @@ const SumUp = (Props: Props) => {
         plus = "";
         let ele = document.getElementById("ele");
         if(ele) {
-            ele.innerHTML = plus;
+            ele.innerHTML =  plus + `<tr><tb><label htmlFor="Context">课程目标:</label>
+            <input id="Context" type="text" placeholder="请输入达成度复合组成部分"></input></tb>
+            <tb><label htmlFor="Weight"> 本课程目标权重:</label>
+            <input id="Weight" type="text" placeholder="请输入权重"></input></tb>
+            </tr>`;
         }
     }
     return(
         <>
         <div id="sumUp">
-            <thead><tr><td id="SUM">达成度:{Sum}%</td></tr></thead>
-            <tbody id="ele" >{plus}</tbody>
-            <hr/>
-            <h2>课程目标</h2>
-            <label htmlFor="Context">课程目标名:</label>
-            <input id="Context" type="text" placeholder="请输入达成度复合组成部分"></input>
-            <label htmlFor="Weight"> 本课程目标权重:</label>
-            <input id="Weight" type="text" placeholder="请输入权重"></input>
-            <br/>
-            <hr/>
-            <h3>课程目标组成元素</h3>
+            <table>
+                <thead><tr><td id="SUM">达成度:{Sum}%</td></tr></thead>
+                <tbody id="ele" >{plus}</tbody>
+            </table>
             <div id="Son"></div>
             <br></br>
             <button id="sumUpButtons" onClick={()=>ComplexPlusIntoSum()} style={{backgroundColor:"green"}}>上传课程目标</button>

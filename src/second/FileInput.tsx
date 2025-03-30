@@ -11,8 +11,19 @@ function FileInput(){
     const [jsonList, setjsonList] = useState<any[]>([]);
     const [headers,setheaders ] = useState<any[][]>([]);
     const [refreshKey, setRefreshKey] = useState(0);
+    const [howTo, setHowTo] = useState(0);
     useEffect(() => {
-        setRefreshKey(prevKey => prevKey + 1); // 当data更新时，更新refreshKey来触发子组件的重新渲染
+        setRefreshKey(prevKey => prevKey + 1);// 当data更新时，更新refreshKey来触发子组件的重新渲染
+        let selectElement = document.getElementById('howTo') as HTMLSelectElement;
+        if (selectElement) {
+            var selectedValue = selectElement.options[selectElement.selectedIndex].value;
+            if (selectedValue === '1') {
+                setHowTo(1);
+            }else{
+                setHowTo(2);
+            }
+        }
+        
       }, [htmlPages]);
     return(
         <>
@@ -47,8 +58,14 @@ function FileInput(){
                         }
                         fileInput.value = ''
                     }}>上传</button>
+                    <br></br>
+                    <label htmlFor="howTo">选择分析方式</label>
+                    <select id="howTo">
+                        <option value="1">上传分数组成表格</option>
+                        <option value="2">上传后手动分析</option>
+                    </select>
                 
-                <TBS htmlPages={htmlPages} jsonList={jsonList} headers={headers} refreshKey={refreshKey}/>
+                <TBS htmlPages={htmlPages} jsonList={jsonList} headers={headers} refreshKey={refreshKey} howTo={howTo}/>
             </div>
         </>
     )
