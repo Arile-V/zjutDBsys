@@ -7,13 +7,13 @@ interface Props {
     howTo: number;
 }
 function NewSum(Props: Props) {
-    let jsonList = Props.jsonListRaw[Props.currentIndex];
-    let headers = Props.headersRaw[Props.currentIndex];
-    let Sum = 0;
-    let weightSum = 0;
-    let SonSumList:string[] = [];
-    let SonSumWeightList:number[] = [];
-    let SonSums: number[] = [];
+    var jsonList = Props.jsonListRaw[Props.currentIndex];
+    var headers = Props.headersRaw[Props.currentIndex];
+    var Sum = 0;
+    var weightSum = 0;
+    var SonSumList:string[] = [];
+    var SonSumWeightList:number[] = [];
+    var SonSums: number[] = [];
     //子元素Sum
     var SonSum = new sonSum("");
     function sumData(index: number,Try: boolean){
@@ -171,6 +171,30 @@ function NewSum(Props: Props) {
                                     }
                                     fileInput.value = ''
                                 }}>分数构成</button>
+                <button onClick={(a)=>{ //将Sum/SonsumList/SonsumWeightList/Sonsums导出为xlsx文件
+                    a.preventDefault();
+                    let sum = Sum;
+                    //let jsonData = [["目标达成度"],[sum],["组成成分"],[SonSumList],[sumWeight],[sumSons]];
+                    let jsonData:string[][] = [];
+                    jsonData.push(["目标达成度"]);
+                    jsonData.push([sum.toString()]);
+                    jsonData.push(["组成成分"]);
+                    jsonData.push(SonSumList);
+                    let SonWeight:string[] = []
+                    for(let i = 0;i<SonSumWeightList.length;i++){
+                        SonWeight.push(SonSumWeightList[i].toString());
+                    }
+                    jsonData.push(SonWeight);
+                    let SonSum:string[] = []
+                    for(let i = 0;i<SonSums.length;i++){
+                        SonSum.push(SonSums[i].toString());
+                    }
+                    jsonData.push(SonSum);
+                    let worksheet = XLSX.utils.aoa_to_sheet(jsonData);
+                    let workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook,worksheet,"Sheet1");
+                    XLSX.writeFile(workbook,"分数构成.xlsx");
+                }}>结果导出</button>
             <div>
                 <table>
                     <tbody>
