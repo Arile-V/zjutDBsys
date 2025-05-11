@@ -14,6 +14,8 @@ function NewSum(Props: Props) {
     var SonSumList:string[] = [];
     var SonSumWeightList:number[] = [];
     var SonSums: number[] = [];
+    var HoleSonSum: sonSum[] = [];
+    var MaxFS: number[] = [];
     //子元素Sum
     var SonSum = new sonSum("");
     function sumData(index: number,Try: boolean){
@@ -88,21 +90,9 @@ function NewSum(Props: Props) {
         for(let i = 0 ; i<SonSums.length;i++){
             PsumSonSum.innerHTML += `<td>${SonSums[i]}</td>`
         }
-
+        HoleSonSum.push(SonSum);
         SonSum = new sonSum("");
     }
-
-    function findIndex(Context: string){
-        for(let i = 0 ; i<headers.length;i++){
-            if(headers[i] === Context){
-                return i;
-            }
-        }
-        console.log("error")
-        return -1;
-    }
-
-
 
     return(
         <>
@@ -117,54 +107,28 @@ function NewSum(Props: Props) {
                                             let workbook = XLSX.read(e.target?.result, {type: 'binary'});
                                             var sheetName = workbook.SheetNames; // 获取第一个sheet的名字
                                             sheetName.forEach((name) => {
-                                                var worksheet = workbook.Sheets[name]; // 读取第一个sheet数据
-                                                var jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1}); // 转换成json
-                                                //var htmlData = XLSX.utils.sheet_to_html(worksheet);
-                                                let context = "";//课程目标
-                                                let weight = 0;//本目标权重
-                                                let sumSons: string[] = [];
-                                                let sonWeight: number[] = [];
-                                                for(let i = 0;i<jsonData.length;i++){
-                                                    let item = jsonData[i];
-                                                    if(item!==undefined&&item!=null){
-                                                        console.log(item);
-                                                        if((item as string[])[0]==="课程目标/权重"){
-                                                            context = (item as string[])[1];
-                                                            weight = Number((item as string[])[2]);
-                                                            SonSum.setName(context);
-                                                            SonSum.setMainWeight(weight);
+                                                let worksheet = workbook.Sheets[name]; // 获取第一个sheet的数据
+                                                let jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, {header: 1}); // 将sheet数据转换为json                               
+                                                for(let i = 2 ; i < jsonData.length && jsonData[i][0] != "总计" ; i++){
+                                                    SonSum.setName(jsonData[i][0]);
+                                                    let left = jsonData[0].indexOf("考核环节及成绩");
+                                                    let right = jsonData[0].indexOf("总评成绩");
+                                                    
+                                                    for(let j = left ; j < right ; j++){
+                                                        let littleSum = 0;
+                                                        for(let k = left ; k < right ; k++){
+                                                            littleSum += jsonData[i][k];
                                                         }
-                                                        if((item as string[])[0]==="组成成分"){
-                                                            for(let i = 1;i<(item as string[]).length;i++){
-                                                                sumSons.push((item as string[])[i]);
-                                                            }
-                                                        }
-                                                        if((item as string[])[0]==="权重占比"){
-                                                            for(let i = 1;i<(item as string[]).length;i++){
-                                                                sonWeight.push(Number((item as string[])[i]));
-                                                            }
-                                                            for(let i = 0;i<sumSons.length;i++){
-                                                                let index = findIndex(sumSons[i]);
-                                                                if(index===-1){//没有找到
-                                                                    alert("表格填写不正确！有课程目标子元素不存在")
-                                                                    break;
-                                                                }else{
-                                                                    let grade = sumData(index,true);
-                                                                    if(SonSum.isCanUpdate()){
-                                                                        alert("表格填写不正确！有课程目标子元素权重总和超过1")
-                                                                        console.log(jsonList);
-                                                                        break;
-                                                                    }
-                                                                    SonSum.addSon(sumSons[i],grade,sonWeight[i]);
-                                                                }
-                                                            }
-                                                            ComplexPlusIntoSum();
-                                                            sumSons = [];
-                                                            sonWeight = [];
-                                                        }
+                                                        SonSum.addSon(jsonData[1][j]
+                                                            ,sumData(jsonList[0].indexOf(jsonData[1][j]),true)
+                                                            ,jsonData[i][j]/littleSum);
+                                                        
                                                     }
+                                                    MaxFS.push(jsonData[i][jsonData[0].indexOf("总评成绩")]);
+                                                    SonSum.setMainWeight(jsonData[i][jsonData[0].indexOf("总评成绩")]/100);
+                                                    ComplexPlusIntoSum();
+                    
                                                 }
-                                                //下面写显示逻辑
                                             })
                                         }
                                         fileReader.readAsArrayBuffer(file);
@@ -176,20 +140,76 @@ function NewSum(Props: Props) {
                     let sum = Sum;
                     //let jsonData = [["目标达成度"],[sum],["组成成分"],[SonSumList],[sumWeight],[sumSons]];
                     let jsonData:string[][] = [];
-                    jsonData.push(["目标达成度"]);
-                    jsonData.push([sum.toString()]);
-                    jsonData.push(["组成成分"]);
-                    jsonData.push(SonSumList);
-                    let SonWeight:string[] = []
-                    for(let i = 0;i<SonSumWeightList.length;i++){
-                        SonWeight.push(SonSumWeightList[i].toString());
-                    }
-                    jsonData.push(SonWeight);
-                    let SonSum:string[] = []
-                    for(let i = 0;i<SonSums.length;i++){
-                        SonSum.push(SonSums[i].toString());
-                    }
-                    jsonData.push(SonSum);
+
+                    
+                    //let Sons:string[] = []
+                    //Sons.push("课程目标");
+                    //for(let i = 0;i<SonSumList.length;i++){
+                    //    Sons.push(SonSumList[i]);
+                    //}
+                    //jsonData.push(Sons);
+
+
+                    //let SonWeight:string[] = []
+                    //for(let i = 0;i<SonSumWeightList.length;i++){
+                    //    SonWeight.push(SonSumWeightList[i].toString());
+                    //}
+                    //jsonData.push(SonWeight);
+                    //let SonSum:string[] = []
+                    //for(let i = 0;i<SonSums.length;i++){
+                    //    SonSum.push(SonSums[i].toString());
+                    //}
+                    //jsonData.push(SonSum);
+
+                    //
+                    let heads:string[] = [];
+                    heads.push("课程目标")    
+                    let MainWeights:string[] = [];
+                    MainWeights.push("分目标达成度");
+                    let sons:string[] = [] ;
+                    sons.push("考核方式");
+                    let littleWeight:string[] = [];
+                    littleWeight.push("占分目标比重");
+                    let numList: string[] = [];
+                    numList.push("全体平均分");
+                    let littleMaxFS:string[] = [];
+                    littleMaxFS.push(" 分目标满分");
+                    let thing = 0 ;
+                    HoleSonSum.forEach((item) => {
+                        heads.push(item.getName());
+                        MainWeights.push(item.getSum().toString());
+
+                        for(let i = 0;i<item.getSonList().length;i++){
+                            
+                            if(item.weightList[i] == 0){
+                                continue;
+                            }
+                            if(i >= 1){
+                                heads.push(" ");
+                                MainWeights.push(" ");
+                            }
+                            sons.push(item.getSonList()[i]);
+                            littleWeight.push(item.weightList[i].toString());
+                            console.log("新函数")
+                            console.log((sumData(jsonList[0].indexOf(item.getSonList()[i]),false)*(MaxFS[thing]/100)*item.weightList[i]).toString())
+                            numList.push((sumData(jsonList[0].indexOf(item.getSonList()[i]),false)*(MaxFS[thing]/100)*item.weightList[i]).toString());
+                            littleMaxFS.push(((MaxFS[thing])*item.weightList[i]).toString());
+                        }
+                        
+                        thing++;
+                    })
+                    jsonData.push(heads);
+                    jsonData.push(sons);
+                    jsonData.push(littleWeight);
+                    jsonData.push(numList);
+                    jsonData.push(littleMaxFS);
+                    jsonData.push(MainWeights);
+
+                    let head:string[] = [];
+                    head.push("总体达成度");
+                    head.push(sum.toString());
+                    jsonData.push(head);
+
                     let worksheet = XLSX.utils.aoa_to_sheet(jsonData);
                     let workbook = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(workbook,worksheet,"Sheet1");

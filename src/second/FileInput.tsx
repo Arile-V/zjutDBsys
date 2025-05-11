@@ -20,7 +20,7 @@ function FileInput(){
             if (selectedValue === '1') {
                 setHowTo(1);
             }else{
-                setHowTo(2);
+                setHowTo(1);
             }
         }
         
@@ -60,7 +60,6 @@ function FileInput(){
                     <label htmlFor="howTo">选择分析方式</label>
                     <select id="howTo">
                         <option value="1">上传分数组成表格</option>
-                        <option value="2">上传后手动分析</option>
                     </select>
                 
                 <TBS htmlPages={htmlPages} jsonList={jsonList} headers={headers} refreshKey={refreshKey} howTo={howTo}/>
